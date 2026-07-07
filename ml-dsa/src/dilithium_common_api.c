@@ -27,7 +27,10 @@
 
 #include "ext_headers_internal.h"
 #include "lc_dilithium.h"
+#ifdef LC_DILITHIUM_ED25519_SIG
 #include "ed25519_pct.h"
+#endif
+#include "status_algorithms.h"
 #include "visibility.h"
 
 LC_INTERFACE_FUNCTION(int, lc_dilithium_ctx_alloc,

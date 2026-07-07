@@ -39,6 +39,25 @@ extern "C" {
  * Dilithium security strength is compiled defined in lc_dilithium.h. Duplicate
  * compilation different sizes would not be possible.
  */
+
+/*
+ * If the caller did not specify a Dilithium type, fall back to the largest
+ * enabled parameter set. The lc_dilithium_<size>.h header files are only
+ * generated for enabled parameter sets which allows probing the build
+ * configuration with __has_include. This covers the configuration where
+ * dilithium_87 is disabled but a smaller parameter set is enabled.
+ */
+#if !defined(LC_DILITHIUM_TYPE_65) && !defined(LC_DILITHIUM_TYPE_44) &&        \
+	defined(__has_include)
+#if !__has_include("lc_dilithium_87.h")
+#if __has_include("lc_dilithium_65.h")
+#define LC_DILITHIUM_TYPE_65
+#elif __has_include("lc_dilithium_44.h")
+#define LC_DILITHIUM_TYPE_44
+#endif
+#endif
+#endif
+
 #ifdef LC_DILITHIUM_TYPE_65
 #define DILITHIUM_F(name) lc_dilithium_65_##name
 #define lc_dilithium_pk lc_dilithium_65_pk

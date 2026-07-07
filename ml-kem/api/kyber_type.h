@@ -39,6 +39,25 @@ extern "C" {
  * Kyber security strength is compiled defined in lc_kyber.h. Duplicate
  * compilation different sizes would not be possible.
  */
+
+/*
+ * If the caller did not specify a Kyber type, fall back to the largest
+ * enabled parameter set. The lc_kyber_<size>.h header files are only
+ * generated for enabled parameter sets which allows probing the build
+ * configuration with __has_include. This covers the configuration where
+ * kyber_1024 is disabled but a smaller parameter set is enabled.
+ */
+#if !defined(LC_KYBER_TYPE_768) && !defined(LC_KYBER_TYPE_512) &&              \
+	defined(__has_include)
+#if !__has_include("lc_kyber_1024.h")
+#if __has_include("lc_kyber_768.h")
+#define LC_KYBER_TYPE_768
+#elif __has_include("lc_kyber_512.h")
+#define LC_KYBER_TYPE_512
+#endif
+#endif
+#endif
+
 #ifdef LC_KYBER_TYPE_768
 #define KYBER_F(name) lc_kyber_768_##name
 #define KEX_F(name) lc_kex_768_##name

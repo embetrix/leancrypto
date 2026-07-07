@@ -1,6 +1,6 @@
-if get_option('dilithium_87').enabled() and dilithium_all_enabled == true
-	include_dilithium_internal = include_directories([ '../src' ])
+include_dilithium_internal = include_directories([ '../src' ])
 
+if get_option('dilithium_87').enabled() and dilithium_all_enabled == true
 	dilithium_tester_c = executable('dilithium_tester_c',
 				[ 'dilithium_tester_c.c',
 				  'dilithium_tester.c',
